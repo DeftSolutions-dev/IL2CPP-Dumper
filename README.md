@@ -1,27 +1,38 @@
-# IL2CPP Dumper DLL
+# IL2CPP Dumper for Arknights: Endfield & Unity Games
 
-Simple injectable DLL tool that dumps IL2CPP metadata from Unity games.
+Simple injectable DLL that dumps IL2CPP metadata from Unity games (classes, fields, methods, namespaces, interfaces, etc.).
 
-**Main features**
-- Extracts classes, fields, methods, interfaces, namespaces from `GameAssembly.dll`
-- Generates two output formats per assembly:
-  - Classic C#-like `.cs` files (with proper access modifiers, static/virtual, inheritance, interfaces)
-  - AI-friendly structured text (easy to feed to LLMs / code generation tools)
-- Activated by pressing **INSERT** after injection
-- Saves dumps to:
-  - `C:\IL2CPP_Dump_Normal\`
-  - `C:\IL2CPP_Dump_AI\`
-- Logs everything to `C:\IL2CPPDump_Log.txt`
+Originally created for **Arknights: Endfield**.
 
-**Originally created for**  
-Arknights: Endfield (and other modern Unity + IL2CPP games)
+### Features
+- Dumps every assembly from `GameAssembly.dll`
+- Two output formats:
+  - **Classic C# style** - readable `.cs` files with proper syntax, access modifiers, inheritance & interfaces
+  - **AI-friendly** - structured plain text, perfect for LLMs, code generation or parsing
+- Activation: press **INSERT** after DLL injection
+- Output paths:
+  - Normal dumps -> `C:\IL2CPP_Dump_Normal\`
+  - AI dumps    -> `C:\IL2CPP_Dump_AI\`
+- Log file -> `C:\IL2CPPDump_Log.txt`
 
-**Supported IL2CPP versions**  
-≈ IL2CPP 27–29 (covers most games built with Unity 2021.3 – 2023.x – 2024.x)
+### Supported IL2CPP versions
+IL2CPP metadata `≈27-29` (Unity 2021.3 - 2023.x - 2024.x builds)
 
-**Usage**
-1. Inject the DLL into the game process (any injector)
-2. Press **INSERT** in-game
-3. Wait for dump completion (check console & log file)
+### Example outputs
 
-Perfect for reverse engineering, modding, cheat development or LLM-based code analysis of Unity IL2CPP titles.
+**Classic C# format** (looks almost like real source code):
+
+![Classic C# dump example](https://github.com/user-attachments/assets/9af853d4-249c-46c7-bdd5-498f3b191180)
+
+**AI-friendly structured format** (easy for AI tools):
+
+![AI-friendly dump example](https://github.com/user-attachments/assets/cc9e636c-6ca3-4c1d-af51-2ee3bf7e0444)
+
+### Usage
+1. Inject the DLL into the game process (any injector works)
+2. Press **INSERT** while in-game
+3. Wait for completion (watch the console and log file)
+
+Great for reverse engineering, modding, cheat development or feeding game structure into AI models.
+
+Contributions, issues and stars are welcome!

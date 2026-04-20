@@ -7,6 +7,7 @@
 namespace api {
 
     extern bool initialized;
+    extern uintptr_t gameAssemblyBase;
 
     // function pointer types
     typedef void * ( __fastcall * get_domain_t )( );
@@ -38,6 +39,7 @@ namespace api {
     typedef const void * ( __fastcall * method_get_param_t )( void * method, uint32_t index );
     typedef const char * ( __fastcall * method_get_param_name_t )( void * method, uint32_t index );
     typedef void * ( __fastcall * method_get_return_type_t )( void * method );
+    typedef void * ( __fastcall * method_get_pointer_t )( void * method );
 
     typedef const char * ( __fastcall * type_get_name_t )( void * type );
     typedef uint32_t( __fastcall * class_get_type_token_t )( void * klass );
@@ -72,6 +74,7 @@ namespace api {
     extern method_get_param_t method_get_param;
     extern method_get_param_name_t method_get_param_name;
     extern method_get_return_type_t method_get_return_type;
+    extern method_get_pointer_t method_get_pointer;
 
     extern type_get_name_t type_get_name;
     extern class_get_type_token_t class_get_type_token;

@@ -5,6 +5,7 @@
 namespace api {
 
     bool initialized = false;
+    uintptr_t gameAssemblyBase = 0;
 
     // function pointers
     get_domain_t get_domain = nullptr;
@@ -37,6 +38,7 @@ namespace api {
     method_get_param_t method_get_param = nullptr;
     method_get_param_name_t method_get_param_name = nullptr;
     method_get_return_type_t method_get_return_type = nullptr;
+    method_get_pointer_t method_get_pointer = nullptr;
 
     type_get_name_t type_get_name = nullptr;
     class_get_type_token_t class_get_type_token = nullptr;
@@ -52,6 +54,8 @@ namespace api {
             Log( "[ERROR] GameAssembly.dll not found" );
             return;
         }
+
+        gameAssemblyBase = reinterpret_cast<uintptr_t>( gameAsm );
 
         // Core functions - fail early if missing
         get_domain = ( get_domain_t ) GetProcAddress( gameAsm, "il2cpp_domain_get" );
@@ -89,6 +93,7 @@ namespace api {
         method_get_param = ( method_get_param_t ) GetProcAddress( gameAsm, "il2cpp_method_get_param" );
         method_get_param_name = ( method_get_param_name_t ) GetProcAddress( gameAsm, "il2cpp_method_get_param_name" );
         method_get_return_type = ( method_get_return_type_t ) GetProcAddress( gameAsm, "il2cpp_method_get_return_type" );
+        method_get_pointer = ( method_get_pointer_t ) GetProcAddress( gameAsm, "il2cpp_method_get_pointer" );
 
         type_get_name = ( type_get_name_t ) GetProcAddress( gameAsm, "il2cpp_type_get_name" );
         class_get_type_token = ( class_get_type_token_t ) GetProcAddress( gameAsm, "il2cpp_class_get_type_token" );
@@ -101,6 +106,7 @@ namespace api {
 
         initialized = true;
         Log( "[OK] IL2CPP API initialized" );
+        Log( method_get_pointer ? "[OK] method_get_pointer resolved" : "[WARN] method_get_pointer not found, using struct offset fallback" );
     }
 
 }

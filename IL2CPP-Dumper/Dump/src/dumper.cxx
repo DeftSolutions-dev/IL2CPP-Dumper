@@ -60,10 +60,13 @@ void Dumper::DumpAssembly( const Il2CppImage & img, bool aiMode ) {
         return;
     }
 
+    uintptr_t baseAddr = api::gameAssemblyBase;
+
     out << "// ========================================================\n";
     out << "// Dumped by @desirepro\n";
     out << "// Assembly: " << asmName << "\n";
     out << "// Classes:  " << img.GetClassCount( ) << "\n";
+    out << "// ImageBase: 0x" << std::hex << std::uppercase << baseAddr << "\n";
     out << "// Date:     " << __DATE__ << " " << __TIME__ << "\n";
     out << "// ========================================================\n\n";
 
@@ -130,10 +133,13 @@ void Dumper::DumpAssembly( const Il2CppImage & img, bool aiMode ) {
 
                 out << "METHODS:\n";
                 for ( const auto & m : cls.GetMethods( ) ) {
-                    uint32_t mf; std::string rt, mn; std::vector<Il2CppClass::ParamInfo> ps;
-                    std::tie( mf, rt, mn, ps ) = m;
+                    uint32_t mf; std::string rt, mn; std::vector<Il2CppClass::ParamInfo> ps; uintptr_t addr;
+                    std::tie( mf, rt, mn, ps, addr ) = m;
 
-                    out << "  " << rt << " " << mn << "(";
+                    uintptr_t rva = ( addr > baseAddr && baseAddr != 0 ) ? addr - baseAddr : 0;
+
+                    out << "  [RVA: 0x" << std::hex << std::uppercase << rva << "] "
+                        << rt << " " << mn << "(";
 
                     for ( size_t j = 0; j < ps.size( ); ++j ) {
                         if ( j > 0 ) out << ", ";
@@ -184,13 +190,17 @@ void Dumper::DumpAssembly( const Il2CppImage & img, bool aiMode ) {
                 if ( !methods.empty( ) ) {
                     out << "        // Methods\n";
                     for ( const auto & m : methods ) {
-                        uint32_t mf; std::string rt, mn; std::vector<Il2CppClass::ParamInfo> ps;
-                        std::tie( mf, rt, mn, ps ) = m;
+                        uint32_t mf; std::string rt, mn; std::vector<Il2CppClass::ParamInfo> ps; uintptr_t addr;
+                        std::tie( mf, rt, mn, ps, addr ) = m;
+
+                        uintptr_t rva = ( addr > baseAddr && baseAddr != 0 ) ? addr - baseAddr : 0;
 
                         std::string acc = GetAccessModifier( mf );
                         std::string mods = ( mf & 0x0010 ) ? "static " : "";
                         if ( mf & 0x0040 ) mods += "virtual ";
 
+                        out << "        // RVA: 0x" << std::hex << std::uppercase << rva
+                            << " VA: 0x" << addr << "\n";
                         out << "        " << acc << " " << mods << rt << " " << mn << "(";
 
                         for ( size_t j = 0; j < ps.size( ); ++j ) {
@@ -198,9 +208,8 @@ void Dumper::DumpAssembly( const Il2CppImage & img, bool aiMode ) {
                             out << ps[ j ].first << " " << ps[ j ].second;
                         }
 
-                        out << ") { }\n";
+                        out << ") { }\n\n";
                     }
-                    out << "\n";
                 }
 
                 out << "    }\n\n";

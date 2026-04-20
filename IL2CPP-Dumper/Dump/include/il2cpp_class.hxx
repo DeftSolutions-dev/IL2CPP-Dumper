@@ -31,7 +31,7 @@ public:
 
 
     using ParamInfo = std::pair<std::string, std::string>;
-    using MethodInfo = std::tuple<uint32_t, std::string, std::string, std::vector<ParamInfo>>;
+    using MethodInfo = std::tuple<uint32_t, std::string, std::string, std::vector<ParamInfo>, uintptr_t>;
     std::vector<MethodInfo> GetMethods( ) const;
 
 };

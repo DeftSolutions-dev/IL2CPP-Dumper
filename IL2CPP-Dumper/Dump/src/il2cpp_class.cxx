@@ -101,6 +101,16 @@ std::vector<Il2CppClass::MethodInfo> Il2CppClass::GetMethods( ) const {
         void * rtype = api::method_get_return_type ? api::method_get_return_type( method ) : nullptr;
         const char * rtname = rtype && api::type_get_name ? api::type_get_name( rtype ) : "void";
 
+        uintptr_t methodAddr = 0;
+        if ( api::method_get_pointer ) {
+            void * ptr = api::method_get_pointer( method );
+            methodAddr = reinterpret_cast<uintptr_t>( ptr );
+        } else {
+            // fallback
+            void * ptr = *reinterpret_cast<void **>( method );
+            methodAddr = reinterpret_cast<uintptr_t>( ptr );
+        }
+
         uint32_t pcount = api::method_get_param_count ? api::method_get_param_count( method ) : 0;
 
         std::vector<ParamInfo> params;
@@ -116,7 +126,7 @@ std::vector<Il2CppClass::MethodInfo> Il2CppClass::GetMethods( ) const {
             );
         }
 
-        methods.emplace_back( flags, rtname ? rtname : "void", mname, std::move( params ) );
+        methods.emplace_back( flags, rtname ? rtname : "void", mname, std::move( params ), methodAddr );
     }
 
     return methods;

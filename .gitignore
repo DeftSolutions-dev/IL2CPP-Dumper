@@ -1,0 +1,5 @@
+.vs/
+*.db
+*.ipch
+bin/
+obj/
